@@ -1,13 +1,16 @@
 @use "./variables.scss" as *;
 
-/* ===== EZNote · 现代化主题层 ===== */
+/* ===== EZNote · 克制主题层 ===== */
 
 :root {
   --ez-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --ez-radius: 12px;
-  --ez-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --ez-shadow-md: 0 6px 20px -6px rgba(0, 0, 0, 0.12);
-  --ez-shadow-lg: 0 16px 40px -12px rgba(0, 0, 0, 0.18);
+  --ez-radius: 10px;
+  --ez-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --ez-shadow-md: 0 4px 14px -6px rgba(0, 0, 0, 0.10);
+
+  /* 中性透明度令牌：亮色模式=黑透明，暗色模式=浅字透明（随主题自动翻转） */
+  --ez-hover: color-mix(in srgb, var(--dark) 5%, transparent);
+  --ez-active: color-mix(in srgb, var(--dark) 9%, transparent);
 
   /* 中文走系统最优字形（雅黑/苹方），西文走 Inter 精致 webfont */
   --headerFont: "Inter", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Segoe UI", system-ui, sans-serif;
@@ -23,37 +26,85 @@
   --codeFont: "JetBrains Mono", "PingFang SC", "Microsoft YaHei", ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
 }
 
-/* ---------- 入场动效 ---------- */
+/* ---------- 目录：中性化 + 当前页背景差异化（覆盖插件内嵌样式） ---------- */
+.explorer-content ul li > a {
+  display: block;
+  padding: 4px 8px;
+  border-radius: 7px;
+  color: var(--dark);
+  opacity: 0.68;
+  font-weight: 400;
+  transition: background 0.15s ease, opacity 0.15s ease;
+}
+.explorer-content ul li > a:hover {
+  background: var(--ez-hover);
+  opacity: 0.95;
+}
+.explorer-content ul li > a.active {
+  color: var(--dark);
+  opacity: 1;
+  font-weight: 600;
+  background: var(--ez-active);
+}
+.explorer .folder-container {
+  padding: 4px 8px;
+  border-radius: 7px;
+  transition: background 0.15s ease;
+}
+.explorer .folder-container:hover {
+  background: var(--ez-hover);
+}
+.folder-container div > a,
+.folder-container div > button span,
+.folder-icon {
+  color: var(--dark);
+}
+.folder-container div > a:hover,
+.folder-icon:hover {
+  color: var(--dark);
+  opacity: 0.8;
+}
+.folder-container div > button span {
+  font-weight: 600;
+}
+.explorer-content .folder-outer > ul {
+  border-left: 1px solid var(--lightgray);
+}
+.explorer .title-button h2 {
+  letter-spacing: 0.04em;
+}
+
+/* ---------- 入场动效（轻量） ---------- */
 @keyframes ez-rise {
-  from { opacity: 0; transform: translateY(14px); }
+  from { opacity: 0; transform: translateY(8px); }
   to   { opacity: 1; transform: none; }
 }
 .page .center {
-  animation: ez-rise 0.55s var(--ez-ease) both;
+  animation: ez-rise 0.45s var(--ez-ease) both;
 }
 
-/* ---------- 顶栏毛玻璃 ---------- */
+/* ---------- 顶栏玻璃拟态（收敛） ---------- */
 .page-header {
-  backdrop-filter: saturate(1.5) blur(14px);
-  -webkit-backdrop-filter: saturate(1.5) blur(14px);
-  background: color-mix(in srgb, var(--light) 75%, transparent) !important;
+  backdrop-filter: saturate(1.2) blur(12px);
+  -webkit-backdrop-filter: saturate(1.2) blur(12px);
+  background: color-mix(in srgb, var(--light) 82%, transparent) !important;
   border-bottom: 1px solid var(--lightgray);
 }
 
-/* ---------- 链接：渐变下划线滑入 ---------- */
+/* ---------- 链接：下划线滑入（唯一保留的装饰动效） ---------- */
 .markdown-rendered a {
   text-decoration: none;
   background-image: linear-gradient(currentColor, currentColor);
   background-size: 0% 1.5px;
   background-repeat: no-repeat;
   background-position: 0 100%;
-  transition: background-size 0.35s var(--ez-ease), color 0.2s;
+  transition: background-size 0.3s var(--ez-ease);
 }
 .markdown-rendered a:hover {
   background-size: 100% 1.5px;
 }
 
-/* ---------- 标题排版 ---------- */
+/* ---------- 排版 ---------- */
 .markdown-rendered h1,
 .markdown-rendered h2,
 .markdown-rendered h3,
@@ -72,35 +123,26 @@
   letter-spacing: 0.01em;
 }
 
-/* ---------- 代码块 ---------- */
+/* ---------- 代码块（静态、无 hover 装饰） ---------- */
 .markdown-rendered pre {
   border: 1px solid var(--lightgray);
   border-radius: var(--ez-radius);
-  transition: box-shadow 0.3s var(--ez-ease), border-color 0.3s;
-}
-.markdown-rendered pre:hover {
-  border-color: color-mix(in srgb, var(--secondary) 35%, var(--lightgray));
-  box-shadow: var(--ez-shadow-md);
 }
 .markdown-rendered :not(pre) > code {
   border-radius: 6px;
   font-size: 0.9em;
 }
 
-/* ---------- 引用 / callout ---------- */
+/* ---------- 引用（中性细线） ---------- */
 .markdown-rendered blockquote {
-  border-left: 3px solid var(--secondary);
-  border-radius: 0 var(--ez-radius) var(--ez-radius) 0;
-  background: color-mix(in srgb, var(--secondary) 6%, transparent);
+  border-left: 2px solid var(--gray);
+  border-radius: 0 6px 6px 0;
+  background: color-mix(in srgb, var(--dark) 4%, transparent);
   padding: 0.7em 1em;
   font-style: normal;
 }
-.callout {
-  border-radius: var(--ez-radius);
-  overflow: hidden;
-}
 
-/* ---------- 表格 ---------- */
+/* ---------- 表格（中性） ---------- */
 .markdown-rendered table {
   border-radius: var(--ez-radius);
   border-collapse: separate;
@@ -109,45 +151,25 @@
   border: 1px solid var(--lightgray);
 }
 .markdown-rendered th {
-  background: color-mix(in srgb, var(--secondary) 7%, var(--light));
+  background: color-mix(in srgb, var(--dark) 4%, transparent);
   font-weight: 600;
 }
 .markdown-rendered tr:hover td {
-  background: color-mix(in srgb, var(--secondary) 4%, transparent);
+  background: color-mix(in srgb, var(--dark) 3%, transparent);
 }
 
-/* ---------- 图片 ---------- */
+/* ---------- 图片（仅圆角） ---------- */
 .markdown-rendered img {
   border-radius: var(--ez-radius);
-  transition: transform 0.35s var(--ez-ease), box-shadow 0.35s var(--ez-ease);
-}
-.markdown-rendered a:hover img {
-  transform: scale(1.015);
-  box-shadow: var(--ez-shadow-lg);
 }
 
-/* ---------- 侧栏 / explorer 微交互 ---------- */
-.explorer .tree-item-self,
-.explorer .folder-outer {
-  border-radius: 8px;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-.explorer .tree-item-self:hover,
-.explorer .folder-outer:hover {
-  background: var(--highlight);
-}
-.explorer .title-button {
-  letter-spacing: 0.04em;
-}
-
-/* ---------- 最近更新 ---------- */
+/* ---------- 最近更新（中性、无位移） ---------- */
 .recent-notes li {
-  border-radius: 10px;
-  transition: background 0.25s ease, transform 0.25s var(--ez-ease);
+  border-radius: 8px;
+  transition: background 0.2s ease;
 }
 .recent-notes li:hover {
-  background: var(--highlight);
-  transform: translateX(4px);
+  background: var(--ez-hover);
 }
 
 /* ---------- 滚动条 ---------- */
@@ -159,17 +181,17 @@
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--gray) 70%, transparent);
+  background: color-mix(in srgb, var(--gray) 55%, transparent);
   border-radius: 99px;
   border: 2px solid var(--light);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--gray);
+  background: color-mix(in srgb, var(--gray) 80%, transparent);
 }
 
-/* ---------- 选中与键盘可达性 ---------- */
+/* ---------- 选中与焦点 ---------- */
 ::selection {
-  background: color-mix(in srgb, var(--secondary) 28%, transparent);
+  background: color-mix(in srgb, var(--secondary) 25%, transparent);
 }
 :focus-visible {
   outline: 2px solid var(--secondary);
@@ -177,11 +199,11 @@
   border-radius: 4px;
 }
 
-/* ---------- hr ---------- */
+/* ---------- 分隔线（纯色） ---------- */
 .markdown-rendered hr {
   border: none;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--lightgray) 20%, var(--lightgray) 80%, transparent);
+  background: var(--lightgray);
   margin: 3em auto;
 }
 
@@ -192,10 +214,10 @@
 }
 .ez-hero .ez-kicker {
   display: inline-block;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--tertiary);
+  color: var(--darkgray);
   margin-bottom: 0.9rem;
 }
 .ez-hero .ez-title {
@@ -206,10 +228,11 @@
   margin: 0 0 0.6em;
 }
 .ez-grad {
-  background: linear-gradient(115deg, var(--secondary) 15%, var(--tertiary) 85%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  background: none;
+  color: var(--secondary);
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  -webkit-text-fill-color: var(--secondary);
 }
 .ez-hero .ez-sub {
   font-size: 1.05rem;
@@ -217,37 +240,36 @@
   margin: 0;
 }
 
-/* ---------- 首页卡片 ---------- */
+/* ---------- 首页卡片（Notion 式平铺） ---------- */
 .ez-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 1rem;
+  gap: 12px;
   margin: 2.4rem 0 3rem;
 }
 .ez-card {
   display: block;
-  padding: 1.3rem 1.4rem;
+  padding: 1.2rem 1.3rem;
   border: 1px solid var(--lightgray);
-  border-radius: 16px;
-  background: color-mix(in srgb, var(--light) 92%, var(--secondary));
+  border-radius: var(--ez-radius);
+  background: var(--light);
   color: var(--dark);
   text-decoration: none !important;
   background-size: 0% 1.5px !important;
-  transition: transform 0.3s var(--ez-ease), box-shadow 0.3s var(--ez-ease), border-color 0.3s;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
 .ez-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--ez-shadow-lg);
-  border-color: color-mix(in srgb, var(--secondary) 45%, var(--lightgray));
+  background: color-mix(in srgb, var(--dark) 3%, var(--light));
+  border-color: var(--gray);
 }
 .ez-card strong {
   display: block;
-  font-size: 1.05rem;
-  font-weight: 700;
-  margin-bottom: 0.35em;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.3em;
 }
 .ez-card span {
-  font-size: 0.88rem;
+  font-size: 0.87rem;
   color: var(--darkgray);
   line-height: 1.6;
 }
@@ -256,9 +278,6 @@
 @media (max-width: 800px) {
   .ez-hero {
     padding: 2rem 0 1rem;
-  }
-  .page .center {
-    animation-duration: 0.4s;
   }
 }
 
