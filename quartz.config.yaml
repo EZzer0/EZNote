@@ -208,7 +208,7 @@ plugins:
     options:
       links:
         GitHub: https://github.com/EZzer0
-        最近更新: /EZNote/updates/
+        最近更新: /EZNote/updates
     layout:
       position: footer
       priority: 50
