@@ -1,6 +1,16 @@
 @use "./variables.scss" as *;
 
-/* ===== EZNote · 克制主题层 ===== */
+/* ============================================================================
+   EZNote 主题层 · 仓库内唯一自定义样式入口
+   位置：eznote/custom.scss（主仓） → CI 拷入 runtime/quartz/styles/custom.scss
+   原则：
+     1. 不改 Quartz 引擎任何源码，升级 = submodule 指针前移，本文件永不冲突
+     2. 颜色一律走 var()/color-mix，随主题自动翻转，禁止硬编码黑白
+     3. 分区编号（1 基础 / 2 全局壳 / 3 MD 内容区 / 4 页面组件 / 5 布局控制 / 6 动效）
+     4. !important 默认禁止，唯一例外注明原因
+   ========================================================================== */
+
+/* ===== 1. 基础令牌 ===== */
 
 :root {
   --ez-ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -8,7 +18,7 @@
   --ez-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.03);
   --ez-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.04);
 
-  /* 中性透明度令牌：亮色模式=黑透明，暗色模式=浅字透明（随主题自动翻转） */
+  /* 中性透明度令牌：亮色=黑透明，暗色=浅字透明（--dark 主题下自动翻转） */
   --ez-hover: color-mix(in srgb, var(--dark) 5%, transparent);
   --ez-active: color-mix(in srgb, var(--dark) 9%, transparent);
 
@@ -18,7 +28,8 @@
   --bodyFont: "Segoe UI", system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
   --codeFont: "Cascadia Mono", "Cascadia Code", Consolas, "PingFang SC", "Microsoft YaHei", ui-monospace, monospace;
 }
-/* 深色模式属性选择器特异性更高，需同级覆盖 */
+/* 机制性重复（非冗余）：引擎在 :root[saved-theme="dark"] 内重设字体变量，
+   特异性高于 :root，必须同级声明才能压回。升级时若引擎删除该块，此块可一并删。 */
 :root[saved-theme="dark"] {
   --headerFont: "Segoe UI", system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
   --titleFont: "Segoe UI", system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
@@ -26,7 +37,9 @@
   --codeFont: "Cascadia Mono", "Cascadia Code", Consolas, "PingFang SC", "Microsoft YaHei", ui-monospace, monospace;
 }
 
-/* ---------- 目录：中性化 + 当前页背景差异化（覆盖插件内嵌样式） ---------- */
+/* ===== 2. 全局壳（目录 / 顶栏 / 滚动条 / 页脚 / 选中） ===== */
+
+/* --- 左侧目录：中性化 + 当前页背景胶囊 --- */
 .explorer-content ul li > a {
   display: block;
   padding: 4px 8px;
@@ -74,16 +87,7 @@
   letter-spacing: 0.04em;
 }
 
-/* ---------- 入场动效（轻量） ---------- */
-@keyframes ez-rise {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: none; }
-}
-.page .center {
-  animation: ez-rise 0.45s var(--ez-ease) both;
-}
-
-/* ---------- 顶栏玻璃拟态（收敛） ---------- */
+/* --- 顶栏玻璃拟态（唯一允许的 !important：压制插件内嵌 <style> 同名规则） --- */
 .page-header {
   backdrop-filter: saturate(1.2) blur(12px);
   -webkit-backdrop-filter: saturate(1.2) blur(12px);
@@ -91,20 +95,72 @@
   border-bottom: 1px solid var(--lightgray);
 }
 
-/* ---------- 链接：下划线滑入（唯一保留的装饰动效） ---------- */
-.markdown-rendered a {
-  text-decoration: none;
-  background-image: linear-gradient(currentColor, currentColor);
-  background-size: 0% 1.5px;
-  background-repeat: no-repeat;
-  background-position: 0 100%;
-  transition: background-size 0.3s var(--ez-ease);
+/* --- 滚动条（6px 细条） --- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
-.markdown-rendered a:hover {
-  background-size: 100% 1.5px;
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--lightgray);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gray);
 }
 
-/* ---------- 排版 ---------- */
+/* --- 选中与键盘焦点 --- */
+::selection {
+  background: color-mix(in srgb, var(--secondary) 25%, transparent);
+}
+:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* --- 最近更新列表 hover --- */
+.recent-notes li {
+  border-radius: 8px;
+  transition: background 0.2s ease;
+}
+.recent-notes li:hover {
+  background: var(--ez-hover);
+}
+
+/* --- 页脚：一行小灰字 --- */
+#quartz-root footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem 1.2rem;
+  padding: 1.5rem 0 2rem;
+  font-size: 0.75rem;
+  color: var(--gray);
+}
+#quartz-root footer > p {
+  margin: 0;
+}
+#quartz-root footer ul {
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#quartz-root footer a {
+  color: var(--gray);
+}
+#quartz-root footer a:hover {
+  color: var(--secondary);
+}
+
+/* ===== 3. MD 内容区（正文全部样式集中于此，按语法类型分节） ===== */
+
+/* --- 3.1 排版 --- */
 .markdown-rendered h1,
 .markdown-rendered h2,
 .markdown-rendered h3,
@@ -123,48 +179,39 @@
   letter-spacing: 0.01em;
 }
 
-/* ---------- 代码块（实底 + 语言角标 + 行内 code 精修） ---------- */
-.markdown-rendered pre {
-  border: 1px solid var(--lightgray);
-  border-radius: var(--ez-radius);
-  background: color-mix(in srgb, var(--dark) 6%, var(--light));
-  position: relative;
+/* --- 3.2 链接：下划线滑入（全站唯一装饰动效） --- */
+.markdown-rendered a {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1.5px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 0.3s var(--ez-ease);
 }
-.markdown-rendered pre::after {
-  content: attr(data-language);
-  position: absolute;
-  top: 0.45rem;
-  right: 0.7rem;
-  font-family: var(--codeFont);
-  font-size: 0.68rem;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: var(--gray);
-  opacity: 0.75;
-  pointer-events: none;
+.markdown-rendered a:hover {
+  background-size: 100% 1.5px;
 }
-.markdown-rendered pre:empty::after,
-.markdown-rendered pre:not([data-language])::after {
-  content: none;
-}
-.markdown-rendered :not(pre) > code {
-  border-radius: 6px;
-  font-size: 0.88em;
-  padding: 0.15em 0.4em;
+/* 外链 ↗ 标识（内链为相对路径，不会命中） */
+.markdown-rendered a[href^="http"]::after {
+  content: "↗";
+  font-size: 0.78em;
+  font-weight: 500;
+  margin-left: 0.15em;
+  opacity: 0.6;
 }
 
-/* ---------- Callout（Obsidian 全类型：实底色块 + 左色条 + 别名映射） ---------- */
+/* --- 3.3 Callout（Obsidian 体系：暗色对齐 Obsidian 深调，亮色同观感 15%） --- */
 .callout {
   border: none;
   border-left: 4px solid var(--color, #448aff);
-  background: color-mix(in srgb, var(--color, #448aff) 30%, var(--light));
+  background: color-mix(in srgb, var(--color, #448aff) 15%, var(--light));
   border-radius: 8px;
   padding: 0 1.1rem;
   margin: 1.2em 0;
 }
-/* 暗色底吃色：同色占比提到 45%，色块才分明 */
+/* 暗色底纯黑压不住色相：基底抬到 #1a1a1a，25% 色 = Obsidian 深调绿 */
 :root[saved-theme="dark"] .callout {
-  background: color-mix(in srgb, var(--color, #448aff) 45%, var(--light));
+  background: color-mix(in srgb, var(--color, #448aff) 25%, #1a1a1a);
 }
 .callout .callout-title {
   padding: 0.9rem 0 0.5rem;
@@ -176,7 +223,7 @@
 .callout .callout-content > :first-child {
   margin-top: 0;
 }
-/* Obsidian 别名类型：补图标与配色（Quartz 只带 13 种基础类型） */
+/* Obsidian 别名类型（引擎只带 13 种基础类型，此处补齐别名的图标与配色） */
 .callout[data-callout="important"] {
   --callout-icon: var(--callout-icon-info);
 }
@@ -192,24 +239,26 @@
   --color: #db8942;
   --callout-icon: var(--callout-icon-warning);
 }
-.callout[data-callout="cite"] {
-  --color: var(--secondary);
-  --callout-icon: var(--callout-icon-quote);
-}
 .callout[data-callout="attention"] {
   --color: #db8942;
   --callout-icon: var(--callout-icon-warning);
 }
-.callout[data-callout="check"] {
+.callout[data-callout="cite"] {
+  --color: var(--secondary);
+  --callout-icon: var(--callout-icon-quote);
+}
+.callout[data-callout="check"],
+.callout[data-callout="done"] {
   --color: #09ad7a;
+}
+.callout[data-callout="check"] {
   --callout-icon: var(--callout-icon-todo);
 }
 .callout[data-callout="done"] {
-  --color: #09ad7a;
   --callout-icon: var(--callout-icon-success);
 }
 
-/* ---------- 引用（Obsidian：实底 + 左灰条） ---------- */
+/* --- 3.4 引用（实底 + 左灰条） --- */
 .markdown-rendered blockquote {
   border-left: 3px solid var(--gray);
   border-radius: 0 8px 8px 0;
@@ -224,7 +273,47 @@
   margin-bottom: 0;
 }
 
-/* ---------- 表格（斑马纹 + 清晰表头层次） ---------- */
+/* --- 3.5 分隔线 --- */
+.markdown-rendered hr {
+  border: none;
+  height: 1px;
+  background: var(--lightgray);
+  margin: 3em auto;
+}
+
+/* --- 3.6 代码块 + 行内 code --- */
+.markdown-rendered pre {
+  border: 1px solid var(--lightgray);
+  border-radius: var(--ez-radius);
+  background: color-mix(in srgb, var(--dark) 6%, var(--light));
+  position: relative;
+}
+/* 右上角语言角标（无 data-language 属性时自动消失） */
+.markdown-rendered pre::after {
+  content: attr(data-language);
+  position: absolute;
+  top: 0.45rem;
+  right: 0.7rem;
+  font-family: var(--codeFont);
+  font-size: 0.68rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--gray);
+  opacity: 0.75;
+  pointer-events: none;
+}
+.markdown-rendered pre:not([data-language])::after {
+  content: none;
+}
+/* 行内 code：两主题统一公式（--dark 与 --light 随主题翻转）= 暗 #333 / 亮 #e0e0e0 */
+.markdown-rendered :not(pre) > code {
+  background: color-mix(in srgb, var(--dark) 18%, var(--light));
+  border-radius: 6px;
+  font-size: 0.88em;
+  padding: 0.15em 0.4em;
+}
+
+/* --- 3.7 表格（斑马纹 + 表头层次 + 行 hover） --- */
 .markdown-rendered table {
   border-radius: var(--ez-radius);
   border-collapse: separate;
@@ -244,7 +333,7 @@
   background: color-mix(in srgb, var(--dark) 6%, var(--light));
 }
 
-/* ---------- 任务列表（Obsidian 自绘复选框） ---------- */
+/* --- 3.8 任务列表（自绘复选框） --- */
 .markdown-rendered li.task-list-item {
   list-style: none;
   position: relative;
@@ -283,7 +372,7 @@
   text-decoration-color: var(--gray);
 }
 
-/* ---------- 标签（胶囊） ---------- */
+/* --- 3.9 标签（胶囊） --- */
 .markdown-rendered a.tag-link {
   display: inline-block;
   font-size: 0.82em;
@@ -292,7 +381,6 @@
   border-radius: 999px;
   background: color-mix(in srgb, var(--secondary) 13%, var(--light));
   color: var(--secondary);
-  text-decoration: none !important;
   transition: background 0.15s ease;
 }
 .markdown-rendered a.tag-link::before {
@@ -301,77 +389,21 @@
 .markdown-rendered a.tag-link:hover {
   background: color-mix(in srgb, var(--secondary) 24%, var(--light));
 }
-.markdown-rendered a.tag-link::after {
-  content: none;
-}
 
-/* ---------- 高亮（==text== / mark） ---------- */
+/* --- 3.10 高亮 ==text== 与图片 --- */
 .markdown-rendered mark {
   background: var(--textHighlight, #ffd54f);
   color: inherit;
   padding: 0.05em 0.3em;
   border-radius: 3px;
 }
-
-/* ---------- 图片（圆角 + 轻投影） ---------- */
 .markdown-rendered img {
   border-radius: var(--ez-radius);
   box-shadow: var(--ez-shadow-sm);
 }
 
-/* ---------- 外链 ↗ 标识 ---------- */
-.markdown-rendered a[href^="http"]::after {
-  content: "↗";
-  font-size: 0.78em;
-  font-weight: 500;
-  margin-left: 0.15em;
-  opacity: 0.6;
-}
+/* ===== 4. 页面组件（首页 Hero / 卡片） ===== */
 
-/* ---------- 最近更新（中性、无位移） ---------- */
-.recent-notes li {
-  border-radius: 8px;
-  transition: background 0.2s ease;
-}
-.recent-notes li:hover {
-  background: var(--ez-hover);
-}
-
-/* ---------- 滚动条（EzInbox 同款 6px 细条） ---------- */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--lightgray);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--gray);
-}
-
-/* ---------- 选中与焦点 ---------- */
-::selection {
-  background: color-mix(in srgb, var(--secondary) 25%, transparent);
-}
-:focus-visible {
-  outline: 2px solid var(--secondary);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
-
-/* ---------- 分隔线（纯色） ---------- */
-.markdown-rendered hr {
-  border: none;
-  height: 1px;
-  background: var(--lightgray);
-  margin: 3em auto;
-}
-
-/* ---------- 首页 Hero ---------- */
 .ez-hero {
   text-align: center;
   padding: 3.2rem 0 1.6rem;
@@ -403,8 +435,6 @@
   color: var(--darkgray);
   margin: 0;
 }
-
-/* ---------- 首页卡片（Notion 式平铺） ---------- */
 .ez-cards {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -418,8 +448,6 @@
   border-radius: var(--ez-radius);
   background: var(--light);
   color: var(--dark);
-  text-decoration: none !important;
-  background-size: 0% 1.5px !important;
   transition: border-color 0.2s ease, background 0.2s ease;
 }
 .ez-card:hover {
@@ -439,8 +467,9 @@
   line-height: 1.6;
 }
 
-/* ---------- 页面级布局控制 ---------- */
-/* 「最近更新」仅在 /updates/ 独立页展示，其余页面隐藏 */
+/* ===== 5. 页面级布局控制 ===== */
+
+/* 「最近更新」仅 /updates 页展示 */
 body:not([data-slug="updates"]) .recent-notes {
   display: none;
 }
@@ -449,42 +478,29 @@ body[data-slug=""] .right.sidebar .graph,
 body[data-slug="index"] .right.sidebar .graph {
   display: none;
 }
-/* 页脚署名与链接：一行小灰字最小化 */
-#quartz-root footer {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem 1.2rem;
-  padding: 1.5rem 0 2rem;
-  font-size: 0.75rem;
-  color: var(--gray);
+
+/* ===== 6. 动效与响应式 ===== */
+
+@keyframes ez-rise {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
-#quartz-root footer > p {
-  margin: 0;
-}
-#quartz-root footer ul {
-  display: flex;
-  gap: 1rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-#quartz-root footer a {
-  color: var(--gray);
-}
-#quartz-root footer a:hover {
-  color: var(--secondary);
+.page .center {
+  animation: ez-rise 0.45s var(--ez-ease) both;
 }
 
-/* ---------- 响应式微调 ---------- */
 @media (max-width: 800px) {
   .ez-hero {
     padding: 2rem 0 1rem;
   }
 }
 
-/* ---------- 尊重减弱动效偏好 ---------- */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
