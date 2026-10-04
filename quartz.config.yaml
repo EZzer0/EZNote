@@ -1,44 +1,44 @@
 # yaml-language-server: $schema=./runtime/quartz/plugins/quartz-plugins.schema.json
 configuration:
-  pageTitle: Quartz 5
+  pageTitle: EZNote
   pageTitleSuffix: ""
   enableSPA: true
   enablePopovers: true
   analytics: null
-  locale: en-US
-  baseUrl: sosiristseng.github.io/template-quartz
+  locale: zh-CN
+  baseUrl: ezzer0.github.io/EZNote
   ignorePatterns:
     - private
     - templates
     - .obsidian
   theme:
-    fontOrigin: googleFonts
-    cdnCaching: true
+    fontOrigin: local
+    cdnCaching: false
     typography:
-      header: Schibsted Grotesk
-      body: Source Sans Pro
-      code: Fira Code
+      header: "Noto Sans SC"
+      body: "Noto Sans SC"
+      code: "JetBrains Mono"
     colors:
       lightMode:
-        light: "#faf8f8"
-        lightgray: "#e5e5e5"
-        gray: "#b8b8b8"
-        darkgray: "#4e4e4e"
-        dark: "#2b2b2b"
-        secondary: "#284b63"
-        tertiary: "#84a59d"
-        highlight: rgba(143, 159, 169, 0.15)
-        textHighlight: "#fff23688"
+        light: "#fcfcfd"
+        lightgray: "#e9e9ef"
+        gray: "#a3a3b2"
+        darkgray: "#3d3d46"
+        dark: "#17171c"
+        secondary: "#4f46e5"
+        tertiary: "#0ea5e9"
+        highlight: rgba(79, 70, 229, 0.10)
+        textHighlight: "#fde68a99"
       darkMode:
-        light: "#161618"
-        lightgray: "#393639"
-        gray: "#646464"
-        darkgray: "#d4d4d4"
-        dark: "#ebebec"
-        secondary: "#7b97aa"
-        tertiary: "#84a59d"
-        highlight: rgba(143, 159, 169, 0.15)
-        textHighlight: "#b3aa0288"
+        light: "#12121a"
+        lightgray: "#2a2a36"
+        gray: "#5f5f70"
+        darkgray: "#d6d6e0"
+        dark: "#f2f2f7"
+        secondary: "#818cf8"
+        tertiary: "#22d3ee"
+        highlight: rgba(129, 140, 248, 0.14)
+        textHighlight: "#fde04788"
 plugins:
   - source: "@quartz-community/created-modified-date"
     enabled: true
@@ -132,6 +132,10 @@ plugins:
     enabled: true
   - source: "@quartz-community/explorer"
     enabled: true
+    options:
+      title: "目录"
+      folderDefaultState: "open"
+      folderClickBehavior: "link"
     layout:
       position: left
       priority: 50
@@ -203,14 +207,14 @@ plugins:
     enabled: true
     options:
       links:
-        GitHub: https://github.com/sosiristseng
+        GitHub: https://github.com/EZzer0
     layout:
       position: footer
       priority: 50
   - source: "@quartz-community/recent-notes"
     enabled: true
     options:
-      title: "Recent notes"
+      title: "最近更新"
       limit: 3
       showTags: true
       hideTagPages: false

@@ -1,0 +1,260 @@
+@use "./variables.scss" as *;
+
+/* ===== EZNote · 现代化主题层 ===== */
+
+:root {
+  --ez-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ez-radius: 12px;
+  --ez-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --ez-shadow-md: 0 6px 20px -6px rgba(0, 0, 0, 0.12);
+  --ez-shadow-lg: 0 16px 40px -12px rgba(0, 0, 0, 0.18);
+}
+
+/* ---------- 入场动效 ---------- */
+@keyframes ez-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+.page .center {
+  animation: ez-rise 0.55s var(--ez-ease) both;
+}
+
+/* ---------- 顶栏毛玻璃 ---------- */
+.page-header {
+  backdrop-filter: saturate(1.5) blur(14px);
+  -webkit-backdrop-filter: saturate(1.5) blur(14px);
+  background: color-mix(in srgb, var(--light) 75%, transparent) !important;
+  border-bottom: 1px solid var(--lightgray);
+}
+
+/* ---------- 链接：渐变下划线滑入 ---------- */
+.markdown-rendered a {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1.5px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  transition: background-size 0.35s var(--ez-ease), color 0.2s;
+}
+.markdown-rendered a:hover {
+  background-size: 100% 1.5px;
+}
+
+/* ---------- 标题排版 ---------- */
+.markdown-rendered h1,
+.markdown-rendered h2,
+.markdown-rendered h3,
+.markdown-rendered h4 {
+  letter-spacing: -0.015em;
+  font-weight: 700;
+}
+.markdown-rendered h2 {
+  margin-top: 2.2em;
+  padding-bottom: 0.35em;
+  border-bottom: 1px solid var(--lightgray);
+}
+.markdown-rendered p,
+.markdown-rendered li {
+  line-height: 1.85;
+  letter-spacing: 0.01em;
+}
+
+/* ---------- 代码块 ---------- */
+.markdown-rendered pre {
+  border: 1px solid var(--lightgray);
+  border-radius: var(--ez-radius);
+  transition: box-shadow 0.3s var(--ez-ease), border-color 0.3s;
+}
+.markdown-rendered pre:hover {
+  border-color: color-mix(in srgb, var(--secondary) 35%, var(--lightgray));
+  box-shadow: var(--ez-shadow-md);
+}
+.markdown-rendered :not(pre) > code {
+  border-radius: 6px;
+  font-size: 0.9em;
+}
+
+/* ---------- 引用 / callout ---------- */
+.markdown-rendered blockquote {
+  border-left: 3px solid var(--secondary);
+  border-radius: 0 var(--ez-radius) var(--ez-radius) 0;
+  background: color-mix(in srgb, var(--secondary) 6%, transparent);
+  padding: 0.7em 1em;
+  font-style: normal;
+}
+.callout {
+  border-radius: var(--ez-radius);
+  overflow: hidden;
+}
+
+/* ---------- 表格 ---------- */
+.markdown-rendered table {
+  border-radius: var(--ez-radius);
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1px solid var(--lightgray);
+}
+.markdown-rendered th {
+  background: color-mix(in srgb, var(--secondary) 7%, var(--light));
+  font-weight: 600;
+}
+.markdown-rendered tr:hover td {
+  background: color-mix(in srgb, var(--secondary) 4%, transparent);
+}
+
+/* ---------- 图片 ---------- */
+.markdown-rendered img {
+  border-radius: var(--ez-radius);
+  transition: transform 0.35s var(--ez-ease), box-shadow 0.35s var(--ez-ease);
+}
+.markdown-rendered a:hover img {
+  transform: scale(1.015);
+  box-shadow: var(--ez-shadow-lg);
+}
+
+/* ---------- 侧栏 / explorer 微交互 ---------- */
+.explorer .tree-item-self,
+.explorer .folder-outer {
+  border-radius: 8px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.explorer .tree-item-self:hover,
+.explorer .folder-outer:hover {
+  background: var(--highlight);
+}
+.explorer .title-button {
+  letter-spacing: 0.04em;
+}
+
+/* ---------- 最近更新 ---------- */
+.recent-notes li {
+  border-radius: 10px;
+  transition: background 0.25s ease, transform 0.25s var(--ez-ease);
+}
+.recent-notes li:hover {
+  background: var(--highlight);
+  transform: translateX(4px);
+}
+
+/* ---------- 滚动条 ---------- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--gray) 70%, transparent);
+  border-radius: 99px;
+  border: 2px solid var(--light);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gray);
+}
+
+/* ---------- 选中与键盘可达性 ---------- */
+::selection {
+  background: color-mix(in srgb, var(--secondary) 28%, transparent);
+}
+:focus-visible {
+  outline: 2px solid var(--secondary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------- hr ---------- */
+.markdown-rendered hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--lightgray) 20%, var(--lightgray) 80%, transparent);
+  margin: 3em auto;
+}
+
+/* ---------- 首页 Hero ---------- */
+.ez-hero {
+  text-align: center;
+  padding: 3.2rem 0 1.6rem;
+}
+.ez-hero .ez-kicker {
+  display: inline-block;
+  font-size: 0.85rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--tertiary);
+  margin-bottom: 0.9rem;
+}
+.ez-hero .ez-title {
+  font-size: clamp(2.4rem, 6.5vw, 3.8rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 0 0 0.6em;
+}
+.ez-grad {
+  background: linear-gradient(115deg, var(--secondary) 15%, var(--tertiary) 85%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.ez-hero .ez-sub {
+  font-size: 1.05rem;
+  color: var(--darkgray);
+  margin: 0;
+}
+
+/* ---------- 首页卡片 ---------- */
+.ez-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1rem;
+  margin: 2.4rem 0 3rem;
+}
+.ez-card {
+  display: block;
+  padding: 1.3rem 1.4rem;
+  border: 1px solid var(--lightgray);
+  border-radius: 16px;
+  background: color-mix(in srgb, var(--light) 92%, var(--secondary));
+  color: var(--dark);
+  text-decoration: none !important;
+  background-size: 0% 1.5px !important;
+  transition: transform 0.3s var(--ez-ease), box-shadow 0.3s var(--ez-ease), border-color 0.3s;
+}
+.ez-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--ez-shadow-lg);
+  border-color: color-mix(in srgb, var(--secondary) 45%, var(--lightgray));
+}
+.ez-card strong {
+  display: block;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 0.35em;
+}
+.ez-card span {
+  font-size: 0.88rem;
+  color: var(--darkgray);
+  line-height: 1.6;
+}
+
+/* ---------- 响应式微调 ---------- */
+@media (max-width: 800px) {
+  .ez-hero {
+    padding: 2rem 0 1rem;
+  }
+  .page .center {
+    animation-duration: 0.4s;
+  }
+}
+
+/* ---------- 尊重减弱动效偏好 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -17,6 +17,8 @@ EZNote/
 ├── quartz.config.yaml       ← 站点主配置：配色/字体/插件启停（见下方自定义指南）
 ├── quartz.ts                ← 高级覆写入口（需 JS 回调的插件选项才用得到）
 ├── runtime/                 ← Quartz 引擎（git submodule，勿手改，见「引擎升级」）
+├── eznote/
+│   └── custom.scss          ← 自定义样式（CI 构建时自动拷入引擎，动效/微交互都在这）
 ├── .github/
 │   ├── workflows/ci.yml     ← 构建+部署：push main 自动触发，约 1~2 分钟上线
 │   ├── workflows/lychee.yml ← 笔记外链死链检查（月度 + push 触发，失败自动开 issue，不阻塞发布）
@@ -76,12 +78,10 @@ plugins:
 
 ### 3. 自定义 CSS
 
-写入 `runtime/quartz/styles/custom.scss`（编译入口：`runtime/quartz/plugins/emitters/componentResources.ts`）。
+写入 **`eznote/custom.scss`**（主仓文件，CI 构建时自动拷贝进引擎的 `runtime/quartz/styles/custom.scss`，submodule 保持纯净、升级不丢）。
 
-> [!WARNING]
-> `runtime/` 是 submodule，**引擎升级会覆盖此文件**。两种策略：
-> - **轻度改动**：直接改，升级被覆盖时从 git 历史找回（`cd runtime && git log -p quartz/styles/custom.scss`）
-> - **长期维护**：fork `jackyzha0/quartz`，把 submodule 指向自己的 fork，在 fork 内维护 custom.scss，再手动 merge 上游更新（`git remote add upstream https://github.com/jackyzha0/quartz.git && git merge upstream/v5`）
+> [!NOTE]
+> 本地预览需手动多拷一次：`cp -f eznote/custom.scss runtime/quartz/styles/custom.scss`
 
 ### 4. 引擎升级
 
@@ -94,6 +94,7 @@ plugins:
 
 ```bash
 cp quartz.config.yaml runtime/
+cp -f eznote/custom.scss runtime/quartz/styles/custom.scss
 cd runtime
 npm ci
 npx quartz plugin install --from-config
