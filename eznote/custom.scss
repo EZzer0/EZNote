@@ -123,10 +123,11 @@
   letter-spacing: 0.01em;
 }
 
-/* ---------- 代码块（静态、无 hover 装饰） ---------- */
+/* ---------- 代码块（静态、无 hover 装饰、统一实底） ---------- */
 .markdown-rendered pre {
   border: 1px solid var(--lightgray);
   border-radius: var(--ez-radius);
+  background: color-mix(in srgb, var(--dark) 6%, var(--light));
 }
 .markdown-rendered :not(pre) > code {
   border-radius: 6px;
@@ -137,7 +138,7 @@
 .callout {
   border: none;
   border-left: 4px solid var(--color, #448aff);
-  background: color-mix(in srgb, var(--color, #448aff) 14%, var(--light));
+  background: color-mix(in srgb, var(--color, #448aff) 30%, var(--light));
   border-radius: 8px;
   padding: 0 1.1rem;
   margin: 1.2em 0;
