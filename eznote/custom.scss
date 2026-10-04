@@ -8,6 +8,12 @@
   --ez-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --ez-shadow-md: 0 6px 20px -6px rgba(0, 0, 0, 0.12);
   --ez-shadow-lg: 0 16px 40px -12px rgba(0, 0, 0, 0.18);
+
+  /* 中文走系统最优字形（雅黑/苹方），西文走 Inter 精致 webfont */
+  --headerFont: "Inter", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Segoe UI", system-ui, sans-serif;
+  --titleFont: "Inter", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Segoe UI", system-ui, sans-serif;
+  --bodyFont: "Inter", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Segoe UI", system-ui, sans-serif;
+  --codeFont: "JetBrains Mono", "PingFang SC", "Microsoft YaHei", ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
 }
 
 /* ---------- 入场动效 ---------- */

@@ -15,8 +15,8 @@ configuration:
     fontOrigin: googleFonts
     cdnCaching: false
     typography:
-      header: "Noto Sans SC"
-      body: "Noto Sans SC"
+      header: Inter
+      body: Inter
       code: "JetBrains Mono"
     colors:
       lightMode:
