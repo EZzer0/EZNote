@@ -79,6 +79,8 @@ plugins:
 插件目录：https://github.com/quartz-community （40+ 官方插件：graph、search、encrypted-pages、canvas-page 等）。
 本地也可以用 CLI 装（会自动改 config）：`npx quartz plugin add github:quartz-community/xxx`（需 Node ≥ 22）。
 
+右栏组件顺序由 `layout.priority` 控制（数字小靠上）：当前 TOC=10 → 反链=50 → 关系图谱=70。
+
 ### 3. Obsidian 插件包（21 个，已随仓同步）
 
 `content/.obsidian/plugins/` 随仓库分发，换机克隆即恢复。清单：
@@ -96,6 +98,8 @@ plugins:
 ### 4. 自定义 CSS
 
 写入 **`eznote/custom.scss`**（主仓文件，CI 构建时自动拷贝进引擎的 `runtime/quartz/styles/custom.scss`，submodule 保持纯净、升级不丢）。
+
+当前职责：字体栈、目录中性化（hover/当前页胶囊）、顶栏玻璃、页脚/hero/卡片、**正文区样式（callout Obsidian 配色 + 4px 左色条 + 14% 实底、引用纯左线、h2 无下划线）**、滚动条、入场动效。
 
 > [!NOTE]
 > 本地预览需手动多拷一次：`cp -f eznote/custom.scss runtime/quartz/styles/custom.scss`
@@ -120,5 +124,5 @@ npx quartz build -d ../content --serve   # http://localhost:8080
 
 ## 迁移历史
 
-- 2026-10-05：视觉体系重做（EzInbox 同源色板 + Segoe UI 系统栈 + 目录中性化当前页背景）；首页「最近更新」迁至 `/updates/` 独立页；favicon 换闪电图标；Obsidian 插件包 21 个；obsidian-git 降频至 12h。
+- 2026-10-05：视觉体系重做（EzInbox 同源色板 + Segoe UI 系统栈 + 目录中性化当前页背景）；首页「最近更新」迁至 `/updates/` 独立页；favicon 换闪电图标；Obsidian 插件包 21 个；obsidian-git 降频至 12h。同日二次：正文区 Notion 化 + callout Obsidian 配色（左色条/实底）；右栏改 TOC 上、关系图谱下。
 - 2026-10-04：由双仓结构（`EZzer0/quartz-notes` 站点仓 + 本地 vault + sync-notes.ps1 同步脚本）合并迁移而来，16 篇笔记全部并入 `content/`，旧仓已归档删除。
