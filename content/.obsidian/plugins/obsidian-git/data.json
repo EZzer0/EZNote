@@ -1,0 +1,6 @@
+{
+  "commitMessage": "vault backup: {{date}}",
+  "autoSaveInterval": 3,
+  "autoPushInterval": 3,
+  "autoPullOnBoot": true
+}
