@@ -5,25 +5,25 @@
 :root {
   --ez-ease: cubic-bezier(0.22, 1, 0.36, 1);
   --ez-radius: 10px;
-  --ez-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --ez-shadow-md: 0 4px 14px -6px rgba(0, 0, 0, 0.10);
+  --ez-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.03);
+  --ez-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.04);
 
   /* 中性透明度令牌：亮色模式=黑透明，暗色模式=浅字透明（随主题自动翻转） */
   --ez-hover: color-mix(in srgb, var(--dark) 5%, transparent);
   --ez-active: color-mix(in srgb, var(--dark) 9%, transparent);
 
-  /* 中文走系统最优字形（雅黑/苹方），西文走 Inter 精致 webfont */
-  --headerFont: "Inter", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Segoe UI", system-ui, sans-serif;
-  --titleFont: "Inter", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Segoe UI", system-ui, sans-serif;
-  --bodyFont: "Inter", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Segoe UI", system-ui, sans-serif;
-  --codeFont: "JetBrains Mono", "PingFang SC", "Microsoft YaHei", ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  /* EzInbox 同源系统字体栈（Segoe UI + 中文兜底），零下载 */
+  --headerFont: "Segoe UI", system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --titleFont: "Segoe UI", system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --bodyFont: "Segoe UI", system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --codeFont: "Cascadia Mono", "Cascadia Code", Consolas, "PingFang SC", "Microsoft YaHei", ui-monospace, monospace;
 }
 /* 深色模式属性选择器特异性更高，需同级覆盖 */
 :root[saved-theme="dark"] {
-  --headerFont: "Inter", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Segoe UI", system-ui, sans-serif;
-  --titleFont: "Inter", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Segoe UI", system-ui, sans-serif;
-  --bodyFont: "Inter", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", "Segoe UI", system-ui, sans-serif;
-  --codeFont: "JetBrains Mono", "PingFang SC", "Microsoft YaHei", ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  --headerFont: "Segoe UI", system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --titleFont: "Segoe UI", system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --bodyFont: "Segoe UI", system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+  --codeFont: "Cascadia Mono", "Cascadia Code", Consolas, "PingFang SC", "Microsoft YaHei", ui-monospace, monospace;
 }
 
 /* ---------- 目录：中性化 + 当前页背景差异化（覆盖插件内嵌样式） ---------- */
@@ -172,21 +172,20 @@
   background: var(--ez-hover);
 }
 
-/* ---------- 滚动条 ---------- */
+/* ---------- 滚动条（EzInbox 同款 6px 细条） ---------- */
 ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--gray) 55%, transparent);
-  border-radius: 99px;
-  border: 2px solid var(--light);
+  background: var(--lightgray);
+  border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--gray) 80%, transparent);
+  background: var(--gray);
 }
 
 /* ---------- 选中与焦点 ---------- */
@@ -261,6 +260,7 @@
 .ez-card:hover {
   background: color-mix(in srgb, var(--dark) 3%, var(--light));
   border-color: var(--gray);
+  box-shadow: var(--ez-shadow-sm);
 }
 .ez-card strong {
   display: block;
@@ -272,6 +272,44 @@
   font-size: 0.87rem;
   color: var(--darkgray);
   line-height: 1.6;
+}
+
+/* ---------- 页面级布局控制 ---------- */
+/* 「最近更新」仅在 /updates/ 独立页展示，其余页面隐藏 */
+body:not([data-slug="updates"]) .recent-notes {
+  display: none;
+}
+/* 关系图谱：文章页保留，首页隐藏 */
+body[data-slug=""] .right.sidebar .graph,
+body[data-slug="index"] .right.sidebar .graph {
+  display: none;
+}
+/* 页脚署名与链接：一行小灰字最小化 */
+#quartz-root footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem 1.2rem;
+  padding: 1.5rem 0 2rem;
+  font-size: 0.75rem;
+  color: var(--gray);
+}
+#quartz-root footer > p {
+  margin: 0;
+}
+#quartz-root footer ul {
+  display: flex;
+  gap: 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+#quartz-root footer a {
+  color: var(--gray);
+}
+#quartz-root footer a:hover {
+  color: var(--secondary);
 }
 
 /* ---------- 响应式微调 ---------- */

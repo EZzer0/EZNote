@@ -1,1 +1,23 @@
-["obsidian-git"]
+[
+  "obsidian-git",
+  "obsidian-style-settings",
+  "iconic",
+  "obsidian-banners",
+  "cmdr",
+  "quickadd",
+  "templater-obsidian",
+  "calendar",
+  "recent-files-obsidian",
+  "homepage",
+  "obsidian-advanced-uri",
+  "periodic-notes",
+  "obsidian-linter",
+  "tag-wrangler",
+  "dataview",
+  "obsidian-kanban",
+  "obsidian-excalidraw-plugin",
+  "obsidian-list-callouts",
+  "obsidian-view-mode-by-frontmatter",
+  "better-word-count",
+  "various-complements"
+]

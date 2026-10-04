@@ -12,32 +12,32 @@ configuration:
     - templates
     - .obsidian
   theme:
-    fontOrigin: googleFonts
+    fontOrigin: local
     cdnCaching: false
     typography:
-      header: Inter
-      body: Inter
-      code: "JetBrains Mono"
+      header: "Segoe UI"
+      body: "Segoe UI"
+      code: "Cascadia Mono"
     colors:
       lightMode:
-        light: "#fcfcfd"
-        lightgray: "#e9e9ef"
-        gray: "#a3a3b2"
-        darkgray: "#3d3d46"
-        dark: "#17171c"
-        secondary: "#4f46e5"
-        tertiary: "#0ea5e9"
-        highlight: rgba(79, 70, 229, 0.10)
+        light: "#fafafa"
+        lightgray: "#e6e6e6"
+        gray: "#737373"
+        darkgray: "#404040"
+        dark: "#171717"
+        secondary: "#3c83f6"
+        tertiary: "#3077e8"
+        highlight: rgba(60, 131, 246, 0.12)
         textHighlight: "#fde68a99"
       darkMode:
-        light: "#12121a"
-        lightgray: "#2a2a36"
-        gray: "#5f5f70"
-        darkgray: "#d6d6e0"
-        dark: "#f2f2f7"
-        secondary: "#818cf8"
-        tertiary: "#22d3ee"
-        highlight: rgba(129, 140, 248, 0.14)
+        light: "#090909"
+        lightgray: "#242424"
+        gray: "#797986"
+        darkgray: "#b0b0b8"
+        dark: "#fafafa"
+        secondary: "#3077e8"
+        tertiary: "#3c83f6"
+        highlight: rgba(48, 119, 232, 0.16)
         textHighlight: "#fde04788"
 plugins:
   - source: "@quartz-community/created-modified-date"
@@ -98,7 +98,7 @@ plugins:
     enabled: false
     order: 92
   - source: "@quartz-community/quartz-fonts"
-    enabled: true
+    enabled: false
   # https://github.com/saberzero1/quartz-themes
   - source: "@quartz-themes/core"
     enabled: false
@@ -208,6 +208,7 @@ plugins:
     options:
       links:
         GitHub: https://github.com/EZzer0
+        最近更新: /EZNote/updates/
     layout:
       position: footer
       priority: 50

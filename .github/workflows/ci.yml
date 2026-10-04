@@ -50,6 +50,7 @@ jobs:
           yq -i '.configuration.baseUrl = "${{ steps.clean_url.outputs.stripped_url }}"' quartz.config.yaml
           cp -vr quartz.config.yaml content/ runtime/
           cp -f eznote/custom.scss runtime/quartz/styles/custom.scss
+          cp -f eznote/icon.png runtime/quartz/static/icon.png
       - name: Setup Node.js
         uses: actions/setup-node@v7
         with:

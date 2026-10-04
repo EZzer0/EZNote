@@ -18,7 +18,8 @@ EZNote/
 ├── quartz.ts                ← 高级覆写入口（需 JS 回调的插件选项才用得到）
 ├── runtime/                 ← Quartz 引擎（git submodule，勿手改，见「引擎升级」）
 ├── eznote/
-│   └── custom.scss          ← 自定义样式（CI 构建时自动拷入引擎，动效/微交互都在这）
+│   ├── custom.scss          ← 自定义样式（CI 构建时自动拷入引擎，动效/微交互都在这）
+│   ├── icon.svg / icon.png  ← 站点图标源文件与 256px 位图（CI 拷入引擎替换默认 favicon）
 ├── .github/
 │   ├── workflows/ci.yml     ← 构建+部署：push main 自动触发，约 1~2 分钟上线
 │   ├── workflows/lychee.yml ← 笔记外链死链检查（月度 + push 触发，失败自动开 issue，不阻塞发布）
@@ -32,7 +33,7 @@ EZNote/
 1. Obsidian 打开 **`content/` 文件夹**当 vault（双链 `[[...]]`、callout、LaTeX、Mermaid、图谱全部原样渲染到网站）
 2. 写笔记
 3. 推送到 `main`（三选一）：
-   - Obsidian 装 **Git 插件**（Vinzent03/obsidian-git），可设定时自动 commit-and-push
+   - Obsidian **Git 插件**已配置为：**每 12 小时最多自动 commit+push 一次**（仅 Obsidian 开着时计时，开机自动 pull）；手动随时点插件按钮；游戏等需要安静的时段不会被打扰
    - GitHub Desktop 点两下
    - 命令行 `git push`
 4. 等 1~2 分钟，Actions 绿灯后线上生效（https://ezzer0.github.io/EZNote/ ）
@@ -43,20 +44,22 @@ EZNote/
 
 ### 1. 配色 / 字体（零代码，优先用这个）
 
-改 `quartz.config.yaml`：
+色板与字体源自同作者的 EzInbox 项目（反复调试定稿），已配好于 `quartz.config.yaml`：
 
 ```yaml
 configuration:
   theme:
+    fontOrigin: local        # 系统字体零下载（字体栈由 eznote/custom.scss 接管）
     colors:
-      light: "#ffffff"      # 页面背景
-      secondary: "#1a73e8"  # 链接色
-      highlight: "#e8f0fe"  # 内链高亮背景
-      # ... 完整色板见 Quartz 官方 Configuration 文档
+      darkMode:
+        light: "#090909"     # 暗色纯黑底
+        lightgray: "#242424" # 中性边框
+        secondary: "#3077e8" # 主蓝（EzInbox primary）
+      # 亮色同源：#fafafa 底 / #3c83f6 主蓝
     typography:
-      header: "Noto Sans SC"   # 标题字体（中文推荐 Noto Sans SC / 霞鹜文楷）
-      body: "Noto Serif SC"
-      code: "JetBrains Mono"
+      header: "Segoe UI"
+      body: "Segoe UI"
+      code: "Cascadia Mono"
 ```
 
 ### 2. 装插件（改 YAML 即可，本地不用装任何环境）
@@ -76,14 +79,28 @@ plugins:
 插件目录：https://github.com/quartz-community （40+ 官方插件：graph、search、encrypted-pages、canvas-page 等）。
 本地也可以用 CLI 装（会自动改 config）：`npx quartz plugin add github:quartz-community/xxx`（需 Node ≥ 22）。
 
-### 3. 自定义 CSS
+### 3. Obsidian 插件包（21 个，已随仓同步）
+
+`content/.obsidian/plugins/` 随仓库分发，换机克隆即恢复。清单：
+
+| 类别 | 插件 |
+| --- | --- |
+| 同步 | obsidian-git（12h 自动 + 手动） |
+| 外观 | Style Settings、Iconic、Banners |
+| 效率 | Commander、QuickAdd、Templater、Homepage、Advanced URI、Calendar、Recent Files、Periodic Notes |
+| 整理 | Linter、Tag Wrangler、Better Word Count、Various Complements |
+| 知识管理 | Dataview、Kanban、Excalidraw、List Callouts、Force Note View Mode |
+
+启用列表在 `content/.obsidian/community-plugins.json`；核心插件另开了 slash-command、footnotes。
+
+### 4. 自定义 CSS
 
 写入 **`eznote/custom.scss`**（主仓文件，CI 构建时自动拷贝进引擎的 `runtime/quartz/styles/custom.scss`，submodule 保持纯净、升级不丢）。
 
 > [!NOTE]
 > 本地预览需手动多拷一次：`cp -f eznote/custom.scss runtime/quartz/styles/custom.scss`
 
-### 4. 引擎升级
+### 5. 引擎升级
 
 - 自动：dependabot 每周开 PR 更新 submodule，Actions 构建绿灯后合并即可
 - 手动：`bash manual_update.sh` 后 push
@@ -103,5 +120,5 @@ npx quartz build -d ../content --serve   # http://localhost:8080
 
 ## 迁移历史
 
-- 2026-10-04：由双仓结构（`EZzer0/quartz-notes` 站点仓 + 本地 `D:\BPP\EZNote` vault + sync-notes.ps1 同步脚本）合并迁移而来，16 篇笔记全部并入 `content/`，旧仓已归档删除。
-- 本地 `D:\BPP\EZNote` 为迁移前原 vault（观察期保留，**请勿再在其中编辑**，以本仓 `content/` 为准）。
+- 2026-10-05：视觉体系重做（EzInbox 同源色板 + Segoe UI 系统栈 + 目录中性化当前页背景）；首页「最近更新」迁至 `/updates/` 独立页；favicon 换闪电图标；Obsidian 插件包 21 个；obsidian-git 降频至 12h。
+- 2026-10-04：由双仓结构（`EZzer0/quartz-notes` 站点仓 + 本地 vault + sync-notes.ps1 同步脚本）合并迁移而来，16 篇笔记全部并入 `content/`，旧仓已归档删除。
