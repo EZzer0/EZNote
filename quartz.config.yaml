@@ -15,31 +15,34 @@ configuration:
     fontOrigin: local
     cdnCaching: false
     typography:
-      header: "Segoe UI"
-      body: "Segoe UI"
+      header: "Bahnschrift, Segoe UI Variable Display"
+      body: "Segoe UI Variable Text"
       code: "Cascadia Mono"
     colors:
       lightMode:
-        light: "#fafafa"
-        lightgray: "#e6e6e6"
-        gray: "#737373"
-        darkgray: "#404040"
-        dark: "#171717"
-        secondary: "#3c83f6"
-        tertiary: "#3077e8"
-        highlight: rgba(60, 131, 246, 0.12)
+        light: "#f6f6f3"
+        lightgray: "#e5e5df"
+        gray: "#6f6f68"
+        darkgray: "#3b3b37"
+        dark: "#141412"
+        secondary: "#2947ff"
+        tertiary: "#6b4dff"
+        highlight: rgba(41, 71, 255, 0.14)
         textHighlight: "#fde68a99"
       darkMode:
-        light: "#090909"
-        lightgray: "#242424"
-        gray: "#797986"
-        darkgray: "#b0b0b8"
-        dark: "#fafafa"
-        secondary: "#3077e8"
-        tertiary: "#3c83f6"
-        highlight: rgba(48, 119, 232, 0.16)
+        light: "#0d0d0c"
+        lightgray: "#1e1e1c"
+        gray: "#808078"
+        darkgray: "#b5b5ad"
+        dark: "#f1f1ec"
+        secondary: "#6d85ff"
+        tertiary: "#9b86ff"
+        highlight: rgba(109, 133, 255, 0.18)
         textHighlight: "#fde04788"
 plugins:
+  - source: "../eznote/plugins/ez-motion"
+    enabled: true
+    order: 4
   - source: "@quartz-community/created-modified-date"
     enabled: true
     options:

@@ -1,0 +1,25 @@
+{
+  "name": "ez-motion",
+  "version": "1.0.0",
+  "description": "EZNote motion layer: cursor, progress, reveal, transitions, magnetics",
+  "type": "module",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "quartz": {
+    "name": "ez-motion",
+    "displayName": "EZ Motion",
+    "category": "transformer",
+    "version": "1.0.0",
+    "quartzVersion": ">=5.0.0",
+    "dependencies": [],
+    "defaultOrder": 5,
+    "defaultEnabled": true
+  }
+}
